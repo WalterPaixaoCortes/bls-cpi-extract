@@ -46,7 +46,7 @@ def extract_from_zip_files():
         month = 12
         while month > 0:
           try:
-            with z.open(config.EXTRACT_FILE_NAME % (index, index, month)) as zf, open(config.XSLX_FILE_NAME % (index, month), 'wb') as f:
+            with z.open(config.EXTRACT_FILE_NAME[index] % (index, index, month)) as zf, open(config.XSLX_FILE_NAME % (index, month), 'wb') as f:
               shutil.copyfileobj(zf, f)
           except:
             print('Error extracting file',config.XSLX_FILE_NAME % (index, month))
@@ -64,7 +64,6 @@ def process_files():
     records = []
     for file in os.listdir(config.INPUT_FOLDER):
       if file.startswith('table7'):
-        print(file)
         wb = xlrd.open_workbook(config.INPUT_FOLDER + file)
         sheet = wb.sheet_by_index(0) 
         split_date = (file.replace('.xlsx','')).split('-')[1]
@@ -80,11 +79,11 @@ def process_files():
               "Unadjusted effect on All Items": sheet.cell_value(i,4)
             })
     if len(records) > 0:
-      with open(config.PROCESSED_DATA, 'w') as fw:
-        dw = csv.DictWriter(fw,records[0].keys)
+      with open(config.PROCESSED_DATA, 'w', newline='') as fw:
+        dw = csv.DictWriter(fw,fieldnames=records[0].keys())
         dw.writeheader()
         for row in records:
-          dw.writerow(records)
+          dw.writerow(row)
     return True
   except:
     print(traceback.format_exc())
@@ -102,7 +101,6 @@ def main():
       print("Error extracting XSLX files.")
   else:
     print("Error downloading files.")
-
 
 if __name__ == '__main__':
   main()
