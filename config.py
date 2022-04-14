@@ -18,3 +18,5 @@ START_YEAR = datetime.date.today().year # should be replaced by Datetime.Year fu
 END_YEAR = 2014
 
 PROCESSED_DATA = 'output/processed_data.csv'
+EXCEL_FILE="output/CPI Weighted.xlsm"
+EXCEL_TAB="processed_data"

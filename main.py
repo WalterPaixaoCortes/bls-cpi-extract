@@ -6,6 +6,7 @@ import csv
 import traceback
 
 import xlrd
+from openpyxl import load_workbook
 
 import config
 
@@ -69,7 +70,7 @@ def process_files():
         split_date = (file.replace('.xlsx','')).split('-')[1]
 
         for i in range(sheet.nrows):
-          if sheet.cell_value(i, 0) == 1:
+          if sheet.cell_value(i, 0) in [0,1]:
             records.append({
               "Year": split_date[0:4],
               "Month": split_date.replace(split_date[0:4],''),
@@ -84,6 +85,28 @@ def process_files():
         dw.writeheader()
         for row in records:
           dw.writerow(row)
+        return records
+    else:
+      return None
+  except:
+    print(traceback.format_exc())
+    return None
+
+
+def update_excel(data):
+  try:
+    wb = load_workbook(filename = config.EXCEL_FILE, read_only=False, keep_vba=True)
+    ws = wb[config.EXCEL_TAB] 
+    row_number = 2
+    for row in data:
+      ws.cell(row=row_number, column=1, value=int(row['Year']))
+      ws.cell(row=row_number, column=2, value=int(row['Month']))
+      ws.cell(row=row_number, column=3, value=row['Expenditure category'])
+      ws.cell(row=row_number, column=4, value=row['Relative importance'])
+      ws.cell(row=row_number, column=5, value=row['Unadjusted percent change'])
+      ws.cell(row=row_number, column=6, value=row['Unadjusted effect on All Items'])
+      row_number += 1
+    wb.save(config.EXCEL_FILE)
     return True
   except:
     print(traceback.format_exc())
@@ -92,9 +115,14 @@ def process_files():
 
 def main():
   if download_files():
+    print('Files downloaded...')
     if extract_from_zip_files():
-      if process_files():
-        print("Process Executed Successfully.")
+      print('Files extracted from zip files...')
+      raw_data = process_files()
+      if raw_data:
+        print('Data extracted from files and formatted...')
+        if update_excel(raw_data):
+          print("Process Executed Successfully.")
       else:
         print("Error processing XSLX files.")
     else:
