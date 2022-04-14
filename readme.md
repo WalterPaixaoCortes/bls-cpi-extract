@@ -20,6 +20,12 @@ $ git clone https://github.com/WalterPaixaoCortes/bls-cpi-extract.git
 $ python -m venv /path/to/new/virtual/environment
 ```
 
+- Activate the virtual environment
+
+```bash
+$ source /path/to/new/virtual/environment/Scripts/activate
+```
+
 - Install the required components (see the command below)
 
 ```
@@ -39,7 +45,12 @@ If the script have executed successfully| the folders input and output should ha
 
 The input folder should have zip files and Excel files with the content required.
 
-The output folder should have the processed_data.csv file| which contains the data that is required. See a sample below:
+The output folder should have 2 files:
+
+- processed_data.csv: file which contains the data that was extracted from the Excel files on the input folder
+- CPI Weighted.xlsm: Excel file that is updated with the extracted data
+
+See a sample below:
 
 | Year | Month | Expenditure category           | Relative importance | Unadjusted percent change | Unadjusted effect on All Items |
 | ---- | ----- | ------------------------------ | ------------------- | ------------------------- | ------------------------------ |

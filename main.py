@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 import requests
 import os
 import shutil
@@ -9,6 +11,7 @@ import xlrd
 from openpyxl import load_workbook
 
 import config
+
 
 def write_file(file_name, data):
   with open(file_name, 'wb') as fw:
